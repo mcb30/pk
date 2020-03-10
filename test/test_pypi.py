@@ -1,8 +1,9 @@
 """PyPI tests"""
 
-from pathlib import Path
 import sys
 import unittest
+from pathlib import Path
+
 from pk.pypi import PyPiPackage
 
 

@@ -1,9 +1,10 @@
 """NPM tests"""
 
-from datetime import date
-from pathlib import Path
 import sys
 import unittest
+from datetime import date
+from pathlib import Path
+
 from pk.npm import NpmPackage
 
 

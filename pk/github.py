@@ -5,10 +5,13 @@ https://developer.github.com/v3/repos/
 """
 
 from __future__ import annotations
-from dataclasses import dataclass
+
 import os
+from dataclasses import dataclass
+
 from requests import PreparedRequest
 from requests.auth import AuthBase
+
 from .base import (Attribute, Base64Attribute, DateTimeAttribute,
                    ListAttribute, Serializable)
 

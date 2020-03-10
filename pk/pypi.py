@@ -1,8 +1,10 @@
 """PyPI packages"""
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Callable
+
 from .base import (Attribute, DateTimeAttribute, DictAttribute, ListAttribute,
                    Serializable, SerializableMapping, SerializableSequence)
 

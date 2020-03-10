@@ -5,8 +5,10 @@ https://github.com/npm/registry/blob/master/docs/responses/package-metadata.md
 """
 
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Callable
+
 from .base import (Attribute, DateTimeAttribute, DictAttribute, ListAttribute,
                    Serializable, SerializableMapping, SerializableSequence)
 

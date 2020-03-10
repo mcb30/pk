@@ -1,18 +1,22 @@
 """Base classes"""
 
 from __future__ import annotations
+
 from base64 import b64decode
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field, InitVar
+from dataclasses import InitVar, dataclass, field
 from datetime import datetime
-from json import JSONEncoder, JSONDecoder
+from json import JSONDecoder, JSONEncoder
 from typing import (Any, Callable, ClassVar, Iterator, MutableMapping,
                     Optional, Type, TypeVar, cast)
 from urllib.parse import urlparse
+
 import dateutil.parser
+
 from requests import PreparedRequest, Session
 from requests.auth import AuthBase
-from yaml import safe_load, safe_dump
+
+from yaml import safe_dump, safe_load
 
 __all__ = [
     'Attribute',

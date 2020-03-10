@@ -1,13 +1,15 @@
 """GitHub tests"""
 
-from datetime import date
-from io import BytesIO
 import os
-from pathlib import Path
 import sys
 import unittest
+from datetime import date
+from io import BytesIO
+from pathlib import Path
 from unittest.mock import patch
-from requests import Session, Response
+
+from requests import Response, Session
+
 from pk.github import GitHubRepo
 
 
