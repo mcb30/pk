@@ -62,6 +62,8 @@ class Serializable:
         """Fetch JSON from URI"""
         rsp = requests.get(uri)
         rsp.raise_for_status()
+        if rsp.encoding is None:
+            rsp.encoding = 'utf-8'
         return cls(json=rsp.text)
 
     @property  # type: ignore[no-redef]
