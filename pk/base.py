@@ -1,6 +1,7 @@
 """Base classes"""
 
 from __future__ import annotations
+from base64 import b64decode
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, InitVar
 from datetime import datetime
@@ -141,6 +142,16 @@ class Attribute:
     def typed(self, value: Any) -> Any:
         """Cast attribute to specified type"""
         return self.type(value)
+
+
+@dataclass
+class Base64Attribute(Attribute):
+    """A data structure Base64-encoded attribute"""
+
+    type: Callable = b64decode
+
+    def typed(self, value: Any) -> Optional[bytes]:
+        return None if value is None else self.type(value)
 
 
 @dataclass
