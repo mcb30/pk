@@ -3,13 +3,15 @@
 from __future__ import annotations
 from base64 import b64decode
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, InitVar
+from dataclasses import dataclass, field, InitVar
 from datetime import datetime
 from json import JSONEncoder, JSONDecoder
-from typing import (Any, Callable, ClassVar, Iterator, Optional, Type,
-                    TypeVar, cast)
+from typing import (Any, Callable, ClassVar, Iterator, MutableMapping,
+                    Optional, Type, TypeVar, cast)
+from urllib.parse import urlparse
 import dateutil.parser
-import requests
+from requests import PreparedRequest, Session
+from requests.auth import AuthBase
 from yaml import safe_load, safe_dump
 
 __all__ = [
@@ -21,6 +23,27 @@ __all__ = [
     'SerializableMapping',
     'SerializableSequence',
 ]
+
+
+@dataclass
+class PerHostAuth(AuthBase):
+    """Per-host HTTPS authentication mechanisms"""
+
+    hosts: MutableMapping[str, AuthBase] = field(default_factory=dict)
+
+    def register(self, host: str, auth: AuthBase) -> None:
+        """Register per-host HTTPS authentication mechanism"""
+        self.hosts[host] = auth
+
+    def __call__(self, r: PreparedRequest) -> PreparedRequest:
+        if r.url is None:
+            return r
+        url = urlparse(r.url)
+        if url.scheme != 'https':
+            return r
+        if url.hostname is None or url.hostname not in self.hosts:
+            return r
+        return self.hosts[url.hostname](r)
 
 
 @dataclass
@@ -37,6 +60,7 @@ class Serializable:
 
     _json_encoder: ClassVar[JSONEncoder] = JSONEncoder()
     _json_decoder: ClassVar[JSONDecoder] = JSONDecoder()
+    _session: ClassVar[Session] = Session()
 
     def __post_init__(self, json: Optional[str], yaml: Optional[str]) -> None:
         json_default = type(self).json  # type: ignore[has-type]
@@ -61,7 +85,7 @@ class Serializable:
     @classmethod
     def fetch_json(cls: Type[Self], uri: str) -> Self:
         """Fetch JSON from URI"""
-        rsp = requests.get(uri)
+        rsp = cls._session.get(uri)
         rsp.raise_for_status()
         if rsp.encoding is None:
             rsp.encoding = 'utf-8'
@@ -79,9 +103,17 @@ class Serializable:
     @classmethod
     def fetch_yaml(cls: Type[Self], uri: str) -> Self:
         """Fetch YAML from URI"""
-        rsp = requests.get(uri)
+        rsp = cls._session.get(uri)
         rsp.raise_for_status()
         return cls(yaml=rsp.text)
+
+    @classmethod
+    def register_auth(cls, host: str, auth: AuthBase) -> None:
+        """Register per-host HTTPS authentication mechanism"""
+        if cls._session.auth is None:
+            cls._session.auth = PerHostAuth()
+        assert isinstance(cls._session.auth, PerHostAuth)
+        cls._session.auth.register(host, auth)
 
 
 @dataclass

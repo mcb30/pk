@@ -6,6 +6,9 @@ https://developer.github.com/v3/repos/
 
 from __future__ import annotations
 from dataclasses import dataclass
+import os
+from requests import PreparedRequest
+from requests.auth import AuthBase
 from .base import (Attribute, Base64Attribute, DateTimeAttribute,
                    ListAttribute, Serializable)
 
@@ -150,3 +153,19 @@ class GitHubRepo(Serializable):
 
 GitHubRepo.parent.type = GitHubRepo
 GitHubRepo.source.type = GitHubRepo
+
+
+@dataclass
+class GitHubTokenAuth(AuthBase):
+    """GitHub API authentication via personal access token"""
+
+    env: str = 'GITHUB_TOKEN'
+
+    def __call__(self, r: PreparedRequest) -> PreparedRequest:
+        token = os.environ.get(self.env)
+        if token is not None:
+            r.headers['Authorization'] = 'token %s' % token
+        return r
+
+
+GitHubRepo.register_auth('api.github.com', GitHubTokenAuth())
