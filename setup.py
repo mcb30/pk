@@ -13,10 +13,10 @@ setup(
     setup_requires=[
         'setuptools_scm',
     ],
-    install_requires=([
+    install_requires=[
         'python-dateutil',
         'pyyaml',
         'requests',
-    ]),
+    ],
     test_suite='test',
 )
