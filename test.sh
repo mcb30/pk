@@ -17,6 +17,10 @@ python3 -m mypy pk test
 #
 python3 -m pycodestyle pk test
 
+# Run flake8
+#
+python3 -m flake8 pk test
+
 # Run pylint
 #
 python3 -m pylint pk test

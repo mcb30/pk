@@ -9,7 +9,11 @@ install:
   - pip install -e .
   - pip install coverage
   - pip install coveralls
+  - pip install flake8
+  - pip install flake8-docstrings
+  - pip install flake8-import-order
   - pip install mypy
+  - pip install pep8-naming
   - pip install pycodestyle
   - pip install pylint
 script: ./test.sh
