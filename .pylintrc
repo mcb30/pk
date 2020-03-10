@@ -1,5 +1,5 @@
 [MESSAGES CONTROL]
-disable=abstract-method,invalid-name,no-member,too-few-public-methods,too-many-ancestors,too-many-instance-attributes
+disable=abstract-method,duplicate-code,invalid-name,no-member,too-few-public-methods,too-many-ancestors,too-many-instance-attributes
 
 [VARIABLES]
 additional-builtins=Self
