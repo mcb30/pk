@@ -1,0 +1,1 @@
+"""Standards-compliant package creation"""
